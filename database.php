@@ -3,8 +3,7 @@
 
 
 
-class Database
-{
+class Database {
     private $connect = null;
 
 
@@ -18,6 +17,29 @@ class Database
 
         $this->connect = mysqli_connect($host, $user, $password, $db)
             or die("Error : " . mysqli_error($this->connect));
+
+        return $this->connect;
+    }
+
+
+    public function getQuery($query) {
+
+        $result = mysqli_query($this->connect, $query);
+
+        $data = [];
+
+        if ($result) {
+            $rows = mysqli_num_rows($result);
+
+            for ($i = 0; $i < $rows; $i++) {
+                $row = mysqli_fetch_row($result);
+
+                $dataItem = ['id' => $row[0], 'name' => $row[1], 'year_at' => $row[2]];
+                array_push($data, $dataItem);
+            }
+        }
+
+        return $data;
     }
 
 
